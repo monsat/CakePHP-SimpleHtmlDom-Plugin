@@ -76,11 +76,15 @@ class SimpleHtmlDomSource extends DataSource {
 	}
 
 	public function get(Model $model, $source = null) {
-		if (empty($model->Html)) {
-			$source = $source ?: $model->source ?: $this->config['source'];
-			$model->Html = file_get_html($source);
-			$this->__requestLog[] = sprintf('get from [%s]', $source);
+		$source = $source ?: $model->source ?: $this->config['source'];
+		if (empty($model->Htmls[$source])) {
+			if (empty($model->Htmls)) {
+				$model->Htmls = array();
+			}
+			$result = !!$model->Htmls[$source] = file_get_html($source);
+			$this->__requestLog[] = sprintf('%s : get from [%s]', $result, $source);
 		}
+		$model->Html = $model->Htmls[$source];
 		return $model->Html;
 	}
 
