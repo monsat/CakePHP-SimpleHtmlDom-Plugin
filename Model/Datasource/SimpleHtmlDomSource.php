@@ -93,8 +93,7 @@ class SimpleHtmlDomSource extends DataSource {
 		$isHtml = !empty($queryData['isHtml']) ? true : false;
 		// all
 		if ($queryData['limit'] !== 1) {
-			$sources = $this->_source($queryData);
-			if (empty($sources)) {
+			if (!$sources = $this->_source($queryData)) {
 				return $model->Htmls;
 			}
 			$results = array();
