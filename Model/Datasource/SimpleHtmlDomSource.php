@@ -18,10 +18,12 @@
 /*
  * database config
 	public $htmldom = array(
+		'datasource' => 'SimpleHtmlDom.SimpleHtmlDomSource',
+		'source' => 'http://www.example.com/example.html', // URL or path of contents
 	);
 */
 App::uses('DataSource', 'Model/Datasource');
-App::uses('HttpSocket', 'Network/Http');
+App::import('Vendor', 'SimpleHtmlDom.SimpleHtmlDom', array('file' => 'simple_html_dom' . DS . 'simple_html_dom.php')); 
 /**
  * SimpleHtmlDomSource
  *
@@ -61,8 +63,6 @@ class SimpleHtmlDomSource extends DataSource {
  */
 	public function __construct($config) {
 		parent::__construct($config);
-		App::import('HttpSocket');
-		$this->Http = new HttpSocket();
 	}
 
 /**
@@ -71,8 +71,31 @@ class SimpleHtmlDomSource extends DataSource {
  * @param Model $model
  * @return array Show only id
  */
-	public function describe(&$model) {
+	public function describe(Model $model) {
 		return array('id' => array());
+	}
+
+	public function get(Model $model, $source = null) {
+		if (empty($model->Html)) {
+			$source = $source ?: $model->source ?: $this->config['source'];
+			$model->Html = file_get_html($source);
+			$this->__requestLog[] = sprintf('get from [%s]', $source);
+		}
+		return $model->Html;
+	}
+
+	public function read(Model $model, $queryData = array()) {
+		$this->get($model);
+		$results = array($model->alias => $model->Html);
+		return $results;
+	}
+
+	public function query($method, $params, Model $model) {
+		if ($method === 'get') {
+			return $this->get($model, $params);
+		}
+		$object = method_exists($model->Html, $method) ? $model->Html : $this;
+		return call_user_func_array(array($object, $method), $params);
 	}
 
 /**
@@ -106,15 +129,11 @@ class SimpleHtmlDomSource extends DataSource {
  * @return array Array of queries run as an array
  */
 	public function getLog($sorted = false, $clear = true) {
-		if ($sorted) {
-			$log = sortByKey($this->_requestsLog, 'took', 'desc', SORT_NUMERIC);
-		} else {
-			$log = $this->_requestsLog;
-		}
+		$log = $this->_requestsLog;
 		if ($clear) {
 			$this->_requestsLog = array();
 		}
-		return array('log' => $log, 'count' => count($log), 'time' => array_sum(Set::extract('{n}.took', $log)));
+		return array('log' => $log, 'count' => count($log), 'time' => 0);
 	}
 
 }
