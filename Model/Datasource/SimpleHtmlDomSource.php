@@ -75,12 +75,13 @@ class SimpleHtmlDomSource extends DataSource {
 		return array('id' => array());
 	}
 
-	public function get(Model $model, $source = null) {
+	public function get(Model $model, $source = null, $isHtml = false) {
 		$source = $source ?: $model->source ?: $this->config['source'];
 		if (empty($model->Htmls[$source])) {
 			if (empty($model->Htmls)) {
 				$model->Htmls = array();
 			}
+			$html = $isHtml ? str_get_html($source) : file_get_html($source);
 			$result = !!$model->Htmls[$source] = file_get_html($source);
 			$this->__requestLog[] = sprintf('%s : get from [%s]', $result, $source);
 		}
@@ -101,8 +102,10 @@ class SimpleHtmlDomSource extends DataSource {
 		} else if (!empty($queryData[0])) {
 			$source = $queryData[0];
 		}
+		// isHtml
+		$isHtml = !empty($queryData['isHtml']) ? true : false;
 		// get
-		$this->get($model, $source);
+		$this->get($model, $source, $isHtml);
 		return array($model->Html);
 	}
 
