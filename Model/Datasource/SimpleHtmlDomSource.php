@@ -113,8 +113,7 @@ class SimpleHtmlDomSource extends DataSource {
 		if ($method === 'get') {
 			return $this->get($model, $params);
 		}
-		$object = method_exists($model->Html, $method) ? $model->Html : $this;
-		return call_user_func_array(array($object, $method), $params);
+		return call_user_func_array(array($this, $method), $params);
 	}
 
 /**
