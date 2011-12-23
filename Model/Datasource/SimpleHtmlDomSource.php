@@ -90,13 +90,21 @@ class SimpleHtmlDomSource extends DataSource {
 	}
 
 	public function read(Model $model, $queryData = array()) {
+		$isHtml = !empty($queryData['isHtml']) ? true : false;
 		// all
 		if ($queryData['limit'] !== 1) {
-			return $model->Htmls;
+			$sources = $this->_source($queryData);
+			if (empty($sources)) {
+				return $model->Htmls;
+			}
+			$results = array();
+			foreach ($sources as $source) {
+				$results[$source] = $this->get($model, $source, $isHtml);
+			}
+			return $results;
 		}
 		// first
 		$source = $this->_source($queryData);
-		$isHtml = !empty($queryData['isHtml']) ? true : false;
 		// get
 		$this->get($model, $source, $isHtml);
 		return array($model->Html);
