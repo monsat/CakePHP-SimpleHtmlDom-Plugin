@@ -38,7 +38,8 @@ class Sample extends AppModel {
 
 ```php
 public function index() {
-  $htmls = $this->Sample->find('all', array('http://www.example.com/a.html', 'http://www.example.com/b.html'));
+  $conditions = array('http://www.example.com/a.html', 'http://www.example.com/b.html');
+  $htmls = $this->Sample->find('all', compact('conditions'));
   debug($htmls[1]->plaintext);
 }
 public function view() {
