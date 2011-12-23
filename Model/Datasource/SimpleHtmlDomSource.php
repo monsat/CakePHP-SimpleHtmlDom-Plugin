@@ -95,18 +95,21 @@ class SimpleHtmlDomSource extends DataSource {
 			return $model->Htmls;
 		}
 		// first
-		// source
+		$source = $this->_source($queryData);
+		$isHtml = !empty($queryData['isHtml']) ? true : false;
+		// get
+		$this->get($model, $source, $isHtml);
+		return array($model->Html);
+	}
+
+	private function _source($queryData) {
 		$source = null;
 		if (!empty($queryData['conditions'])) {
 			$source = $queryData['conditions'];
 		} else if (!empty($queryData[0])) {
 			$source = $queryData[0];
 		}
-		// isHtml
-		$isHtml = !empty($queryData['isHtml']) ? true : false;
-		// get
-		$this->get($model, $source, $isHtml);
-		return array($model->Html);
+		return $source;
 	}
 
 	public function query($method, $params, Model $model) {
