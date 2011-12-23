@@ -89,9 +89,21 @@ class SimpleHtmlDomSource extends DataSource {
 	}
 
 	public function read(Model $model, $queryData = array()) {
-		$this->get($model);
-		$results = array($model->alias => $model->Html);
-		return $results;
+		// all
+		if ($queryData['limit'] !== 1) {
+			return $model->Htmls;
+		}
+		// first
+		// source
+		$source = null;
+		if (!empty($queryData['conditions'])) {
+			$source = $queryData['conditions'];
+		} else if (!empty($queryData[0])) {
+			$source = $queryData[0];
+		}
+		// get
+		$this->get($model, $source);
+		return array($model->Html);
 	}
 
 	public function query($method, $params, Model $model) {
