@@ -48,6 +48,20 @@ public function view() {
 }
 ```
 
+* others
+  * isHtml
+
+```php
+# at controller
+public function index() {
+  $conditions = '<ul id="list"><li>1st</li><li>2nd</li></ul>';
+  $isHtml = true;
+  $html = $this->Sample->find('first', compact('conditions', 'isHtml'));
+  debug($html->plaintext);
+  $firstChild = $html->find('#list')->first_child();
+  debug($firstChild->innertext);
+}
+```
 See also
 ----
 http://simplehtmldom.sourceforge.net/manual.htm
