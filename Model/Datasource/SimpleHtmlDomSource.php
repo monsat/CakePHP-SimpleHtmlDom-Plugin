@@ -82,7 +82,7 @@ class SimpleHtmlDomSource extends DataSource {
 				$model->Htmls = array();
 			}
 			$html = $isHtml ? str_get_html($source) : file_get_html($source);
-			$result = !!$model->Htmls[$source] = file_get_html($source);
+			$result = !!$model->Htmls[$source] = $html;
 			$this->__requestLog[] = sprintf('%s : get from [%s]', $result, $source);
 		}
 		$model->Html = $model->Htmls[$source];
