@@ -47,3 +47,7 @@ public function view() {
   debug($html->plaintext);
 }
 ```
+
+See also
+----
+http://simplehtmldom.sourceforge.net/manual.htm
