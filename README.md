@@ -40,7 +40,7 @@ class Sample extends AppModel {
 public function index() {
   $conditions = array('http://www.example.com/a.html', 'http://www.example.com/b.html');
   $htmls = $this->Sample->find('all', compact('conditions'));
-  debug($htmls[1]->plaintext);
+  debug($htmls['http://www.example.com/b.html']->plaintext);
 }
 public function view() {
   $html = $this->Sample->find('first');
