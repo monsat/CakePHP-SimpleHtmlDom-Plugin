@@ -23,7 +23,7 @@
 	);
 */
 App::uses('DataSource', 'Model/Datasource');
-App::import('Vendor', 'SimpleHtmlDom.SimpleHtmlDom', array('file' => 'simple_html_dom' . DS . 'simple_html_dom.php')); 
+App::import('Vendor', 'SimpleHtmlDom.SimpleHtmlDom', array('file' => 'simple_html_dom' . DS . 'simple_html_dom.php'));
 /**
  * SimpleHtmlDomSource
  *
@@ -71,7 +71,7 @@ class SimpleHtmlDomSource extends DataSource {
  * @param Model $model
  * @return array Show only id
  */
-	public function describe(Model $model) {
+	public function describe($model) {
 		return array('id' => array());
 	}
 
@@ -89,7 +89,7 @@ class SimpleHtmlDomSource extends DataSource {
 		return $model->Html;
 	}
 
-	public function read(Model $model, $queryData = array()) {
+	public function read(Model $model, $queryData = array(), $recursive = null) {
 		$isHtml = !empty($queryData['isHtml']) ? true : false;
 		// all
 		if ($queryData['limit'] !== 1) {
